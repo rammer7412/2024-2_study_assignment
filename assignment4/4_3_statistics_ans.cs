@@ -20,8 +20,58 @@ namespace statistics
 
             int stdCount = data.GetLength(0) - 1;
             // ---------- TODO ----------
-            
-            // --------------------
+            double[] mathScores = new double[stdCount];
+            double[] scienceScores = new double[stdCount];
+            double[] englishScores = new double[stdCount];
+            double[] totalScores = new double[stdCount];
+            string[] studentNames = new string[stdCount];
+
+            // 데이터를 배열에 저장
+            for (int i = 1; i <= stdCount; i++)
+            {
+                studentNames[i - 1] = data[i, 1];
+                mathScores[i - 1] = double.Parse(data[i, 2]);
+                scienceScores[i - 1] = double.Parse(data[i, 3]);
+                englishScores[i - 1] = double.Parse(data[i, 4]);
+                totalScores[i - 1] = mathScores[i - 1] + scienceScores[i - 1] + englishScores[i - 1];
+            }
+
+            // 과목별 평균 계산
+            double avgMath = mathScores.Average();
+            double avgScience = scienceScores.Average();
+            double avgEnglish = englishScores.Average();
+            Console.WriteLine("Average Scores:");
+            Console.WriteLine($"Math: {avgMath:F2}");
+            Console.WriteLine($"Science: {avgScience:F2}");
+            Console.WriteLine($"English: {avgEnglish:F2}");
+
+            // 과목별 최대/최소 점수 계산
+            double maxMath = mathScores.Max();
+            double minMath = mathScores.Min();
+            double maxScience = scienceScores.Max();
+            double minScience = scienceScores.Min();
+            double maxEnglish = englishScores.Max();
+            double minEnglish = englishScores.Min();
+            Console.WriteLine("\nMax and min Scores:");
+            Console.WriteLine($"Math: ({maxMath}, {minMath})");
+            Console.WriteLine($"Science: ({maxScience}, {minScience})");
+            Console.WriteLine($"English: ({maxEnglish}, {minEnglish})");
+
+            // 학생별 총점 순위 계산
+            var ranking = totalScores
+                .Select((score, index) => new { Name = studentNames[index], Score = score })
+                .OrderByDescending(x => x.Score)
+                .Select((x, rank) => new { x.Name, Rank = rank + 1 })
+                .ToList();
+
+            Console.WriteLine("\nStudents rank by total scores:");
+            foreach (var student in ranking)
+            {
+                string suffix = student.Rank == 1 ? "st" : student.Rank == 2 ? "nd" : student.Rank == 3 ? "rd" : "th";
+                Console.WriteLine($"{student.Name}: {student.Rank}{suffix}");
+            }
+// --------------------
+
         }
     }
 }
