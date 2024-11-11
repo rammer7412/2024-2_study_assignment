@@ -65,6 +65,9 @@ Canvas에 3가지 오브젝트를 적절한 위치에 배치해주세요.
 - "Message"라는 이름의 텍스트 (프리팹)
 - "Button"이라는 이름의 버튼, 버튼 내부 텍스트는 "Restart"
 
+"Button"에서 자동 생성된 텍스트를 삭제하시고, 프리팹 텍스트를 붙여주세요.
+TextMeshPro 관련 오류 창은 무시하셔도 됩니다.
+
 <br/>
 
 Canvas에 Scripts/UIManager 컴포넌트를 붙인 후에,
@@ -74,10 +77,15 @@ Score Text, Message Text, Restart Button에 각각 적절한 것들을 붙여주
 ### Game Manager
 
 "GameManager"라는 이름의 빈 오브젝트를 생성해주세요.
+(이름을 실수하시면 안됩니다)
 
 Scripts/GameManager 컴포넌트를 붙인 후에,
 
 My UI Manager, Character, Cam Obj에 각각 적절한 것들을 붙여주세요.
+
+Restart Button에서 onclick 하단에 + 버튼을 누르신 후에,
+
+Scene에 있는 GameManager를 붙여 주세요. *Asset에 있는 GameManager가 아닙니다.
 
 ### Test
 
