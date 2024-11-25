@@ -26,7 +26,9 @@ public class GameManager : MonoBehaviour
     {
         // PlayerBall, CamObj, MyUIManager를 얻어온다.
         // ---------- TODO ---------- 
-        
+        PlayerBall = GameObject.Find("PlayerBall");
+        CamObj = GameObject.Find("Main Camera");
+        MyUIManager = GameObject.Find("Canvas").GetComponent<UIManager>();
         // -------------------- 
     }
 
@@ -40,7 +42,16 @@ public class GameManager : MonoBehaviour
     {
         // 좌클릭시 raycast하여 클릭 위치로 ShootBallTo 한다.
         // ---------- TODO ---------- 
-        
+        if (Input.GetMouseButtonDown(0))
+        {
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
+            if (Physics.Raycast(ray, out hit))
+            {
+                Vector3 targetPos = hit.point; 
+                ShootBallTo(targetPos);
+            }
+        }
         // -------------------- 
     }
 
@@ -56,15 +67,29 @@ public class GameManager : MonoBehaviour
         // 각 공은 RowSpacing만큼의 간격을 가진다.
         // 각 공의 이름은 {index}이며, 아래 함수로 index에 맞는 Material을 적용시킨다.
         // Obj.GetComponent<MeshRenderer>().material = Resources.Load<Material>("Materials/ball_1");
-        // ---------- TODO ---------- 
-        
+        // ---------- TODO ----------
+        Vector3 BallPosition;
+        for(int i=0;i<5;i++){
+            for(int j=0;j<=i;j++){
+                int ballNum = i*(i+1)/2+j+1;
+                BallPosition = StartPosition + new Vector3(2*j-i,0,-2*i) * (BallRadius + RowSpacing/2);
+                GameObject Obj = Instantiate(BallPrefab,BallPosition,StartRotation);
+                Obj.name=$"{ballNum}";
+                Obj.GetComponent<MeshRenderer>().material = Resources.Load<Material>($"Materials/ball_{ballNum}");
+            }
+        }
         // -------------------- 
     }
     void CamMove()
     {
         // CamObj는 PlayerBall을 CamSpeed의 속도로 따라간다.
         // ---------- TODO ---------- 
-        
+        if (CamObj && PlayerBall) 
+        {
+        Vector3 targetPosition = PlayerBall.transform.position;
+        targetPosition.y = CamObj.transform.position.y;
+        CamObj.transform.position = Vector3.Lerp(CamObj.transform.position,targetPosition,Time.deltaTime * CamSpeed);
+        }
         // -------------------- 
     }
 
@@ -79,6 +104,15 @@ public class GameManager : MonoBehaviour
         // 힘은 CalcPower 함수로 계산하고, y축 방향 힘은 0으로 한다.
         // ForceMode.Impulse를 사용한다.
         // ---------- TODO ---------- 
+        if (PlayerBall){
+            Rigidbody ballRigidbody = PlayerBall.GetComponent<Rigidbody>();
+            Vector3 displacement = targetPos - PlayerBall.transform.position;
+            Vector3 direction = displacement.normalized;
+            direction.y = 0;
+
+            float power = CalcPower(displacement);
+            ballRigidbody.AddForce(direction * power, ForceMode.Impulse);
+        }
         
         // -------------------- 
     }
@@ -88,7 +122,7 @@ public class GameManager : MonoBehaviour
     {
         // "{ballName} falls"을 1초간 띄운다.
         // ---------- TODO ---------- 
-        
+        MyUIManager.DisplayText($"{ballName} falls",1f);
         // -------------------- 
     }
 }
