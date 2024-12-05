@@ -11,6 +11,9 @@ public class UIManager : MonoBehaviour
     private float MessageTimer = 0f;
     private Coroutine CurrentMessage;
 
+    void Awake() {
+        MessageText.text = "";
+    }
     void Update()
     {
         if (MessageTimer > 0)
@@ -23,11 +26,13 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    // 턴이 바뀌었음을 알림
     public void UpdateTurn(int currentTurn)
     {
         TurnText.text = currentTurn == 1 ? "White's Turn" : "Black's Turn";
     }
 
+    // message를 duration동안 보여줌
     public void ShowMessage(string message, float duration = 1f)
     {
         if (CurrentMessage != null)
@@ -55,5 +60,10 @@ public class UIManager : MonoBehaviour
     public void ShowCheckmate(int winner)
     {
         ShowMessage($"{(winner == 1 ? "White" : "Black")} wins by checkmate!", float.MaxValue);
+    }
+
+    public void ShowStalemate()
+    {
+        ShowMessage("Draw", float.MaxValue);
     }
 }
